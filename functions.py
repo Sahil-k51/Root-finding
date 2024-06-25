@@ -81,6 +81,50 @@ def create_function_from_string(equation):
             return None
 
     return fx_equal_0
+def secant_method(f, x0, x1, tol=1e-8, max_iter=1000):
+    steps = [(x0, f(x0)), (x1, f(x1))]
+    for _ in range(max_iter):
+        fx0, fx1 = f(x0), f(x1)
+        if abs(fx1) < tol:
+            return x1, steps
+        if fx1 == fx0:
+            raise ValueError("Division by zero in Secant method")
+        x_new = x1 - fx1 * (x1 - x0) / (fx1 - fx0)
+        steps.append((x_new, f(x_new)))
+        x0, x1 = x1, x_new
+    raise ValueError("Maximum iterations exceeded. No solution found. ")
+
+def bisection_method(f, a, b, tol=1e-8, max_iter=1000):
+    if f(a) * f(b) > 0:
+        raise ValueError("Function does not change sign on the interval try different limits or method")
+    steps = []
+    for _ in range(max_iter):
+        c = (a + b) / 2
+        steps.append((c, f(c)))
+        if abs(f(c)) < tol or (b - a) / 2 < tol:
+            return c, steps
+        if f(c) * f(a) < 0:
+            b = c
+        else:
+            a = c
+    raise ValueError("Maximum iterations exceeded. No solution found.")
+
+def false_position_method(f, a, b, tol=1e-8, max_iter=1000):
+    if f(a) * f(b) > 0:
+        raise ValueError("Function does not change sign on the interval")
+    steps = []
+    for _ in range(max_iter):
+        fa, fb = f(a), f(b)
+        c = a - fa * (b - a) / (fb - fa)
+        steps.append((c, f(c)))
+        if abs(f(c)) < tol:
+            return c, steps
+        if f(c) * fa < 0:
+            b = c
+        else:
+            a = c
+    raise ValueError("Maximum iterations exceeded. No solution found.")
+
 
 def newton_raphson(f, df, x0, tol=1e-8, max_iter=1000):
     x = x0
@@ -90,7 +134,7 @@ def newton_raphson(f, df, x0, tol=1e-8, max_iter=1000):
         fx = f(x)
         dfx = df(x)
         if abs(fx) < tol:
-            return x, errors, steps
+            return x
         if dfx == 0:
             raise ValueError("Derivative is zero. No solution found.")
         x_new = x - fx / dfx
@@ -99,37 +143,9 @@ def newton_raphson(f, df, x0, tol=1e-8, max_iter=1000):
         x = x_new
     raise ValueError("Maximum iterations exceeded. No solution found.")
 
+
+
 def df(f, x):
     h = 1e-6  # Small step size
     return (f(x + h) - f(x)) / h
 
-def animate_newton_raphson(f, steps):
-    fig, ax = plt.subplots(figsize=(12, 8))  # Increased figure size for better visibility
-    x_vals = np.linspace(-10, 10, 400)
-    y_vals = f(x_vals)
-    
-    ax.plot(x_vals, y_vals, label='f(x)')
-    ax.axhline(0, color='black', linewidth=0.5)
-    
-    line, = ax.plot([], [], 'ro-', label='Newton-Raphson steps')
-    point, = ax.plot([], [], 'bo', label='Current point')
-    
-    def init():
-        line.set_data([], [])
-        point.set_data([], [])
-        return line, point
-    
-    def update(frame):
-        x_data, y_data = zip(*steps[:frame+1])
-        line.set_data(x_data, y_data)
-        point.set_data(x_data[-1], y_data[-1])
-        return line, point
-    
-    ani = FuncAnimation(fig, update, frames=len(steps), init_func=init, blit=True, repeat=False)
-    
-    # Save the animation as a video file
-    writer = FFMpegWriter(fps=1, metadata=dict(artist='Me'), bitrate=1800)  # Adjust fps for slower iteration
-    video_path = "newton_raphson_animation.mp4"
-    ani.save(video_path, writer=writer)
-    
-    return video_path
