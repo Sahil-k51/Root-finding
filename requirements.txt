@@ -1,1 +1,3 @@
 matplotlib
+io
+base64
