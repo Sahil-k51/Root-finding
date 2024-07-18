@@ -11,12 +11,12 @@ st.title('Root Finder')
 equation = st.text_input('Enter your equation f(x) = 0 in terms of x. Example: x**2 - 4*x + 4')
 
 # Dropdown menu to select the method
-method = st.selectbox('Select the root-finding method', ('Newton-Raphson', 'secant', 'Bisection', 'False Position'))
+method = st.selectbox('Select the root-finding method', ('Newton-Raphson', 'Secant', 'Bisection', 'False Position'))
 
 # Input fields based on the selected method
 if method in ['Newton-Raphson']:
     guess = st.number_input('Enter initial guess for the root')
-elif method in ['secant']:
+elif method in ['Secant']:
     first_guess = st.number_input('Enter first guess for the root')
     second_guess = st.number_input('Enter second guess for the root')
 else:
@@ -33,10 +33,10 @@ if st.button('Find Root'):
             # Convert initial guess to float
             x0 = float(guess)
             # Find the root using Newton-Raphson method
-            root = newton_raphson(f, lambda x: df(f, x), x0)
+            root, steps = newton_raphson(f, lambda x: df(f, x), x0)
         
-        elif method == 'secant':
-            # Convert initial guess to float
+        elif method == 'Secant':
+            # Convert initial guesses to float
             x0, x1 = float(first_guess), float(second_guess)
             # Find the root using Secant method
             root, steps = secant_method(f, x0, x1)
@@ -83,3 +83,5 @@ if st.button('Find Root'):
         
     except ValueError as e:
         st.error(f"Error: {e}")
+    except Exception as e:
+        st.error(f"An unexpected error occurred: {e}")
