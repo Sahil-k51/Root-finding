@@ -72,14 +72,16 @@ def false_position_method(f, a, b, tol=1e-8, max_iter=1000):
             a = c
     raise ValueError("Maximum iterations exceeded. No solution found.")
 
-
+def df(f, x):
+    h = 1e-6  # Small step size
+    return (f(x + h) - f(x)) / h
 def newton_raphson(f, df, x0, tol=1e-8, max_iter=1000):
     x = x0
     steps = [(x, f(x))]
     errors = []
     for i in range(max_iter):
         fx = f(x)
-        dfx = df(x)
+        dfx = df(f,x)
         if abs(fx) < tol:
             return x
         if dfx == 0:
@@ -92,7 +94,5 @@ def newton_raphson(f, df, x0, tol=1e-8, max_iter=1000):
 
 
 
-def df(f, x):
-    h = 1e-6  # Small step size
-    return (f(x + h) - f(x)) / h
+
 
