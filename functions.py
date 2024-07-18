@@ -1,58 +1,5 @@
-# import numpy as np
-
-# def create_function_from_string(equation):
-#     # Safe list of functions and constants
-#     allowed_functions = {
-#         'sin': np.sin,
-#         'cos': np.cos,
-#         'tan': np.tan,
-#         'log': np.log,
-#         'exp': np.exp,
-#         'sqrt': np.sqrt,
-#         'power': np.power,
-#         'pi': np.pi,
-#         'e': np.e
-#     }
-
-#     # Cleaning and checking the input
-#     equation = equation.replace('^', '**')  # Replace ^ with ** for power operation
-
-#     # Defining a function that evaluates the input equation
-#     def fx_equal_0(x):
-#         try:
-#             # Evaluating the equation safely
-#             return eval(equation, {"__builtins__": None}, {**allowed_functions, 'x': x})
-#         except Exception as e:
-#             print(f"Error in evaluating the equation: {e}")
-#             return None
-
-#     return fx_equal_0
-
-# def newton_raphson(f, df, x0, tol=1e-8, max_iter=1000):
-#     x = x0
-#     steps = [(x, f(x))]
-#     errors = []
-#     for i in range(max_iter):
-#         fx = f(x)
-#         dfx = df(x)
-#         if abs(fx) < tol:
-#             return x, errors, steps
-#         if dfx == 0:
-#             raise ValueError("Derivative is zero. No solution found.")
-#         x_new = x - fx / dfx
-#         steps.append((x_new, f(x_new)))
-#         errors.append(abs(x_new - x))
-#         x = x_new
-#     raise ValueError("Maximum iterations exceeded. No solution found.")
-
-# def df(f, x):
-#     h = 1e-6  # Small step size
-#     return (f(x + h) - f(x)) / h
-
-
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation, FFMpegWriter
 
 def create_function_from_string(equation):
     # Safe list of functions and constants
