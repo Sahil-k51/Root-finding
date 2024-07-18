@@ -33,7 +33,7 @@ if st.button('Find Root'):
             # Convert initial guess to float
             x0 = float(guess)
             # Find the root using Newton-Raphson method
-            root, steps = newton_raphson(f, lambda x: df(f, x), x0)
+            root, steps = newton_raphson(f,df, x0)
         
         elif method == 'Secant':
             # Convert initial guesses to float
